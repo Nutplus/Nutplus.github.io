@@ -1,25 +1,44 @@
-<html>
+<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>iframe全屏测试</title>
-    <mce:style><!--
-body { margin: 0px;  }
-iframe {border: 0px;}
---></mce:style><style mce_bogus="1">body { margin: 0px;  }
-iframe {border: 0px;}</style>
+    <title>API Query Page</title>
 </head>
-<mce:script type="text/javascript"><!--
-		function resize(){
-			document.getElementById('frame3d').style.height = document.body.clientHeight - 84+"px";
-		}
-		window.onresize = resize;
+<body>
+    <h1>API Query </h1>
+    <p>Enter a question and click the "Query" button to get the API results:</p >
 
-// --></mce:script>
-<body scroll="no">
+    <input type="text" id="questionInput" placeholder="Enter your question">
+    <button onclick="queryAPI()">Query</button>
 
-<iframe id="frame3d" name="frame3d" frameborder="0" width="100%" scrolling="auto"
-        style="margin-top: -4px;" onload="this.style.height=document.body.clientHeight-84"
-        height="100%" src="https://www.bilibili.com/" mce_src="map.jsp"></iframe>
+    <p>API Response:</p >
+    <div id="apiResponse"></div>
+
+    <script>
+        function queryAPI() {
+            const question = document.getElementById("questionInput").value;
+            const data = {
+                question: question,
+                type: 0,
+                options: [],
+                workType: 'ks',
+                questionData: question
+            };
+            fetch("http://cx.icodef.com/wyn-nb?v=4", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+                    "Authorization": "d7ode0j6jaVzvK"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())
+            .then(result => {
+                document.getElementById("apiResponse").innerText = result;
+            })
+            .catch(error => {
+                document.getElementById("apiResponse").innerText = "Error: " + error.message;
+            });
+        }
+    </script>
 </body>
 </html>
